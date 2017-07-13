@@ -19,6 +19,7 @@
   "config": {
     "bin-dir": "bin"
   },
+  "prefer-stable": true,
   "minimum-stability": "dev",
   "require": {
       "eventbus-interop/eventbus-interop": "^0.1",
