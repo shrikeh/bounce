@@ -2,9 +2,6 @@
 use Acclimate\Container\ContainerAcclimator;
 use EventIO\InterOp\EventInterface as Event;
 use Pimple\Container;
-use Shrikeh\Bounce\Emitter;
-use Shrikeh\Bounce\Event\Map\Glob;
-use Shrikeh\Bounce\Event\Named;
 use Shrikeh\Bounce\Examples\Mock\Listener\Foo;
 use Shrikeh\Bounce\Listener\Acceptor;
 use Shrikeh\Bounce\Listener\PsrContainer;
