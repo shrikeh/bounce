@@ -4,7 +4,7 @@ namespace Shrikeh\Bounce;
 
 use EventIO\InterOp\EmitterInterface;
 use EventIO\InterOp\EmitterTrait;
-use EventIO\InterOp\EventInterface as Event;
+use EventIO\InterOp\EventInterface;
 use EventIO\InterOp\ListenerAcceptorInterface;
 use Shrikeh\Bounce\Dispatcher\Dispatcher;
 use Shrikeh\Bounce\Dispatcher\DispatcherInterface;
@@ -17,17 +17,20 @@ use Shrikeh\Bounce\Listener\Acceptor;
  */
 final class Emitter implements EmitterInterface, ListenerAcceptorInterface
 {
-
-    use EmitterTrait;
     /**
      * @var Dispatcher
      */
     private $dispatcher;
 
     /**
-     * @var ListenerAcceptor
+     * @var ListenerAcceptorInterface
      */
     private $listeners;
+
+    /**
+     * @var bool
+     */
+    private $emitting;
 
     /**
      * @param ListenerAcceptorInterface|null $listeners  A listener acceptor
@@ -61,13 +64,27 @@ final class Emitter implements EmitterInterface, ListenerAcceptorInterface
         $this->dispatcher   = $dispatcher;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function emit(...$events)
+    {
+        $this->emitting = true;
+
+        foreach ($events as $event) {
+            $this->parseEvent($event);
+        }
+
+        $this->dispatchListeners();
+    }
 
     /**
      * {@inheritdoc}
      */
-    public function emitEvent(Event $event)
+    public function emitEvent(EventInterface $event)
     {
-        $this->dispatcher->dispatch($event, $this->listeners);
+        $this->dispatcher->enqueue($event);
+        $this->dispatchEvents();
     }
 
     /**
@@ -78,7 +95,6 @@ final class Emitter implements EmitterInterface, ListenerAcceptorInterface
         $listener,
         $priority = self::PRIORITY_NORMAL
     ) {
-
         $this->listeners->addListener(
             $eventMap,
             $listener,
@@ -101,5 +117,38 @@ final class Emitter implements EmitterInterface, ListenerAcceptorInterface
     private function createNamedEvent(string $event): Named
     {
         return Named::create($event);
+    }
+
+    /**
+     * Run the dispatcher if we aren't emitting
+     */
+    private function dispatchEvents()
+    {
+        if (!$this->emitting) {
+            $this->dispatchListeners();
+        }
+    }
+
+    /**
+     *
+     */
+    private function dispatchListeners()
+    {
+        $this->emitting = true;
+        $this->dispatcher->dispatch($this->listeners);
+        $this->emitting = false;
+    }
+
+    /**
+     * @param mixed $event
+     * @return mixed
+     */
+    private function parseEvent($event)
+    {
+        if ($event instanceof EventInterface) {
+            return $this->emitEvent($event);
+        }
+
+        return $this->emitName($event);
     }
 }

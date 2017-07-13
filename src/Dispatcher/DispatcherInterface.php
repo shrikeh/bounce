@@ -11,9 +11,14 @@ use Shrikeh\Bounce\Listener\ListenerAcceptorInterface;
 interface DispatcherInterface
 {
     /**
-     * @param EventInterface            $event    The event to dispatch
      * @param ListenerAcceptorInterface $acceptor The acceptor of listeners
      * @return mixed
      */
-    public function dispatch(EventInterface $event, ListenerAcceptorInterface $acceptor);
+    public function dispatch(ListenerAcceptorInterface $acceptor);
+
+    /**
+     * @param EventInterface $event An event to queue
+     * @return mixed
+     */
+    public function enqueue(EventInterface $event);
 }

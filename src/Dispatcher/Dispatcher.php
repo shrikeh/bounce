@@ -73,10 +73,8 @@ class Dispatcher implements DispatcherInterface
      * {@inheritdoc}
      */
     public function dispatch(
-        EventInterface $event,
         ListenerAcceptorInterface $acceptor
     ) {
-        $this->queue->queue($event);
         if (!$this->isDispatching()) {
             $this->setDispatching();
             foreach ($this->queue->events() as $event) {
@@ -91,6 +89,24 @@ class Dispatcher implements DispatcherInterface
             }
             $this->clearDispatching();
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function enqueue(EventInterface $event)
+    {
+        $this->queue->queue($event);
+    }
+
+
+    /**
+     * Set the dispatching flag to true.
+     */
+    public function setDispatching()
+    {
+        $this->dispatching = true;
+        $this->log(LogLevel::INFO, self::LOG_DISPATCH_LOOP_STARTING);
     }
 
     /**
@@ -136,14 +152,6 @@ class Dispatcher implements DispatcherInterface
         $listener->handle($event);
     }
 
-    /**
-     * Set the dispatching flag to true.
-     */
-    private function setDispatching()
-    {
-        $this->dispatching = true;
-        $this->log(LogLevel::INFO, self::LOG_DISPATCH_LOOP_STARTING);
-    }
 
     /**
      * Set the dispatching flag to false.
