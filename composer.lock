@@ -4,25 +4,27 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "f65648c7b1ea40ce708ddd4bd210d36a",
+    "content-hash": "cf200ffd436d5b48f9f46e76e6391c46",
     "packages": [
         {
             "name": "eventbus-interop/eventbus-interop",
-            "version": "dev-master",
+            "version": "0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-eventbus-interop/event-bus-interop.git",
-                "reference": "8a7a30f72cc4b1e41db25b47bbd15867279b1575"
+                "reference": "0add883fccb80bc9177208f4d73666bae993eff8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-eventbus-interop/event-bus-interop/zipball/8a7a30f72cc4b1e41db25b47bbd15867279b1575",
-                "reference": "8a7a30f72cc4b1e41db25b47bbd15867279b1575",
+                "url": "https://api.github.com/repos/php-eventbus-interop/event-bus-interop/zipball/0add883fccb80bc9177208f4d73666bae993eff8",
+                "reference": "0add883fccb80bc9177208f4d73666bae993eff8",
                 "shasum": ""
             },
+            "require": {
+                "php": ">=5.6"
+            },
             "require-dev": {
-                "escapestudios/symfony2-coding-standard": "^2.9",
-                "eventbus-interop/phpleague": "self.version"
+                "escapestudios/symfony2-coding-standard": "^2.9"
             },
             "type": "library",
             "autoload": {
@@ -41,7 +43,7 @@
                 }
             ],
             "description": "Interoperability interface definitions for event buses",
-            "time": "2017-07-13 13:33:56"
+            "time": "2017-07-13T17:27:16+00:00"
         },
         {
             "name": "psr/container",
@@ -199,7 +201,7 @@
                 "interoperability",
                 "service locator"
             ],
-            "time": "2016-03-03T10:18:08+00:00"
+            "time": "2016-03-03 10:18:08"
         },
         {
             "name": "container-interop/container-interop",
@@ -284,7 +286,7 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2017-02-16T16:15:51+00:00"
+            "time": "2017-02-16 16:15:51"
         },
         {
             "name": "escapestudios/symfony2-coding-standard",
@@ -331,7 +333,7 @@
                 "phpcs",
                 "symfony"
             ],
-            "time": "2017-06-08T11:06:02+00:00"
+            "time": "2017-06-08 11:06:02"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -385,7 +387,7 @@
                 "reflection",
                 "static analysis"
             ],
-            "time": "2017-04-30T11:58:12+00:00"
+            "time": "2017-04-30 11:58:12"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -660,7 +662,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2017-05-31T16:22:32+00:00"
+            "time": "2017-05-31 16:22:32"
         },
         {
             "name": "pimple/pimple",
@@ -710,7 +712,7 @@
                 "container",
                 "dependency injection"
             ],
-            "time": "2017-07-13T08:55:36+00:00"
+            "time": "2017-07-13 08:55:36"
         },
         {
             "name": "sebastian/comparator",
@@ -774,7 +776,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2017-07-11T16:29:53+00:00"
+            "time": "2017-07-11 16:29:53"
         },
         {
             "name": "sebastian/diff",
@@ -826,7 +828,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2017-07-13T02:44:20+00:00"
+            "time": "2017-07-13 02:44:20"
         },
         {
             "name": "sebastian/exporter",
@@ -893,7 +895,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2017-04-03T13:19:02+00:00"
+            "time": "2017-04-03 13:19:02"
         },
         {
             "name": "sebastian/recursion-context",
@@ -946,7 +948,7 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "time": "2017-03-07T15:09:59+00:00"
+            "time": "2017-03-07 15:09:59"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -1024,7 +1026,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2017-07-13T01:37:12+00:00"
+            "time": "2017-07-13 01:37:12"
         },
         {
             "name": "symfony/console",
@@ -1094,7 +1096,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2017-07-12T09:59:19+00:00"
+            "time": "2017-07-12 09:59:19"
         },
         {
             "name": "symfony/debug",
@@ -1150,7 +1152,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2017-07-06T13:37:40+00:00"
+            "time": "2017-07-06 13:37:40"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -1213,7 +1215,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2017-06-12T16:03:21+00:00"
+            "time": "2017-06-12 16:03:21"
         },
         {
             "name": "symfony/finder",
@@ -1262,7 +1264,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2017-06-01T21:02:15+00:00"
+            "time": "2017-06-01 21:02:15"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -1321,7 +1323,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2017-06-14T15:44:48+00:00"
+            "time": "2017-06-14 15:44:48"
         },
         {
             "name": "symfony/process",
@@ -1370,7 +1372,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2017-07-12T13:09:21+00:00"
+            "time": "2017-07-12 13:09:21"
         },
         {
             "name": "symfony/yaml",
@@ -1425,7 +1427,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-07-03T10:20:17+00:00"
+            "time": "2017-07-03 10:20:17"
         },
         {
             "name": "webmozart/assert",
@@ -1475,13 +1477,12 @@
                 "check",
                 "validate"
             ],
-            "time": "2016-11-23T20:04:41+00:00"
+            "time": "2016-11-23 20:04:41"
         }
     ],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "eventbus-interop/eventbus-interop": 20,
         "psr/container": 20,
         "psr/log": 20,
         "acclimate/container": 20,

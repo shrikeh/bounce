@@ -20,9 +20,9 @@ final class EventType implements MapInterface
      */
     public function __construct(string $eventType)
     {
-        if (!interface_exists($eventType) || class_exists($eventType)) {
+        if (!(interface_exists($eventType) || class_exists($eventType))) {
             $msg = 'No such interface or class as %s exists';
-            throw new \RuntimeException(sprintf($msg));
+            throw new \RuntimeException(sprintf($msg, $eventType));
         }
         $this->eventType = $eventType;
     }

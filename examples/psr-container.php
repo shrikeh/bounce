@@ -16,17 +16,18 @@ define('BAZ_LISTENER', 'BazListener');
 $pimple     = new Container();
 $pimple->register(new Bounce());
 
-
 $acclimator = new ContainerAcclimator();
 $container  = $acclimator->acclimate($pimple);
 
-$emitter = $pimple[Bounce::EMITTER];
+$emitter = $container->get(Bounce::EMITTER);
 
 $pimple[FOO_LISTENER] = function() {
     return new Foo('this ran');
 };
 
-$pimple[BAR_LISTENER] = function() use ($emitter) {
+$pimple[BAR_LISTENER] = function(Container $con) {
+    $emitter = $con[Bounce::EMITTER];
+
     return function(Event $event) use ($emitter) {
         echo $event->name() . "\n";
         $emitter->emit('flibble');

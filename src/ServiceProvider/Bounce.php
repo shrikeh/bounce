@@ -22,6 +22,7 @@ final class Bounce implements ServiceProviderInterface
     const EVENT_MAP_FACTORY = 'bounce.event_map_factory';
     const MAPPED_LISTENERS  = 'bounce.mapped_listeners';
     const EVENT_QUEUE       = 'bounce.event_queue';
+    const LOG_DISPATCHER    = 'bounce.dispatcher.logger';
 
     /**
      * Registers services on the given container.
@@ -52,8 +53,15 @@ final class Bounce implements ServiceProviderInterface
             );
         };
 
+        $pimple[self::LOG_DISPATCHER] = function() {
+            return null;
+        };
+
         $pimple[self::DISPATCHER] = function (Container $con): Dispatcher {
-            return Dispatcher::create($con[self::EVENT_QUEUE]);
+            return Dispatcher::create(
+                $con[self::EVENT_QUEUE],
+                $con[self::LOG_DISPATCHER]
+            );
         };
 
         $pimple[self::EMITTER] = function (Container $con): Emitter {
