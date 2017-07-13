@@ -21,7 +21,12 @@ class PsrContainer implements ListenerInterface
      */
     private $container;
 
-    public function __construct(ContainerInterface $container, $entryId)
+    /**
+     * PsrContainer constructor.
+     * @param ContainerInterface $container A PSR Container to build from
+     * @param string             $entryId   An ID in the PSR container
+     */
+    public function __construct(ContainerInterface $container, string $entryId)
     {
         $this->container    = $container;
         $this->entryId      = $entryId;
@@ -41,7 +46,6 @@ class PsrContainer implements ListenerInterface
     private function listener(): ListenerInterface
     {
         if (!$this->container->has($this->entryId)) {
-
         }
         $listener = $this->container->get($this->entryId);
 

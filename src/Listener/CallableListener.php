@@ -4,6 +4,10 @@ namespace Shrikeh\Bounce\Listener;
 use EventIO\InterOp\EventInterface;
 use EventIO\InterOp\ListenerInterface;
 
+/**
+ * Class CallableListener
+ * @package Shrikeh\Bounce\Listener
+ */
 class CallableListener implements ListenerInterface
 {
     /**
@@ -11,6 +15,10 @@ class CallableListener implements ListenerInterface
      */
     private $listener;
 
+    /**
+     * CallableListener constructor.
+     * @param callable $listener A lambda or invokable object to handle the event.
+     */
     public function __construct(callable $listener)
     {
         $this->listener = $listener;

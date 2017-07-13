@@ -32,13 +32,13 @@ class Dispatcher implements DispatcherInterface
     private $dispatching  = false;
 
     /**
-     * @param EventQueueInterface|null $queue
-     * @param LoggerInterface|null $logger
+     * @param EventQueueInterface|null $queue  A queue of events
+     * @param LoggerInterface|null     $logger An optional logger
      * @return Dispatcher
      */
     public static function create(
-        EventQueueInterface $queue  = null,
-        LoggerInterface $logger     = null
+        EventQueueInterface $queue = null,
+        LoggerInterface $logger = null
     ): self {
         if (null === $queue) {
             $queue = EventQueue::create();
@@ -49,7 +49,8 @@ class Dispatcher implements DispatcherInterface
 
     /**
      * Dispatcher constructor.
-     * @param $queue
+     * @param EventQueueInterface $queue The event queue
+     * @param LoggerInterface|null $logger An optional logger
      */
     private function __construct(
         EventQueueInterface $queue,
@@ -93,7 +94,7 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * @param Event $event
+     * @param EventInterface $event The event to dispatch through listeners
      * @param ListenerAcceptorInterface $acceptor
      */
     private function dispatchEvent(
@@ -102,28 +103,30 @@ class Dispatcher implements DispatcherInterface
     ) {
         foreach ($acceptor->listenersFor($event) as $listener) {
             if ($event->isPropagationStopped()) {
-                $this->log(LogLevel::INFO,
+                $this->log(
+                    LogLevel::INFO,
                     sprintf(
                         'Event "%s" propagation stopped, halting propagation',
                         $event->name()
                     )
                 );
+
                 return;
             }
             $this->handleEvent($event, $listener);
         }
-
     }
 
     /**
-     * @param Event $event
+     * @param EventInterface $event
      * @param ListenerInterface $listener
      */
     private function handleEvent(
         EventInterface $event,
         ListenerInterface $listener
     ) {
-        $this->log(LogLevel::INFO,
+        $this->log(
+            LogLevel::INFO,
             sprintf(
                 'Passing event "%s" to Listener "%s"',
                 $event->name(),
@@ -150,5 +153,4 @@ class Dispatcher implements DispatcherInterface
         $this->dispatching = false;
         $this->log(LogLevel::INFO, self::LOG_DISPATCH_LOOP_COMPLETE);
     }
-
 }

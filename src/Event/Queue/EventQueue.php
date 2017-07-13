@@ -6,6 +6,10 @@ use \Generator;
 use \Iterator;
 use \SplQueue;
 
+/**
+ * Class EventQueue
+ * @package Shrikeh\Bounce\Event\Queue
+ */
 final class EventQueue implements EventQueueInterface
 {
     /**
@@ -15,7 +19,7 @@ final class EventQueue implements EventQueueInterface
 
 
     /**
-     * @param Iterator|null $events
+     * @param Iterator|null $events Events to queue
      * @return EventQueue
      */
     public static function create(Iterator $events = null)
@@ -35,17 +39,16 @@ final class EventQueue implements EventQueueInterface
 
     /**
      * EventQueue constructor.
-     * @param EventQueue $queue
+     * @param EventQueue $queue An SplQueue to put events into
      */
     private function __construct(SplQueue $queue)
     {
         $this->queue = $queue;
     }
 
-
     /**
      * Add an event to the event queue
-     * @param EventInterface $event The event to add
+     * @param EventInterface[] ...$events The event to add
      * @return Generator
      */
     public function queue(EventInterface ...$events)

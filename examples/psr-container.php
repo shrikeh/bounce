@@ -26,7 +26,7 @@ $pimple[FOO_LISTENER] = function() {
 
 $pimple[BAR_LISTENER] = function() {
     return function(Event $event) {
-        echo $event->name();
+        echo $event->name() . "\n";
     };
 };
 
@@ -36,6 +36,6 @@ $barListener = new PsrContainer($container, BAR_LISTENER);
 $emitter = $pimple[Bounce::EMITTER];
 
 $emitter->addListener('foo.*', $fooListener, Acceptor::PRIORITY_LOW);
-$emitter->addListener('foo.bar', $barListener, Acceptor::PRIORITY_HIGH);
+$emitter->addListener('*.bar', $barListener, Acceptor::PRIORITY_HIGH);
 
-$emitter->emit('foo.bar');
+$emitter->emit('foo.bar', 'foo.baz', 'baz.bar', 'foo.bar');

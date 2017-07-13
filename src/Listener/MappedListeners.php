@@ -4,6 +4,7 @@ namespace Shrikeh\Bounce\Listener;
 use ArrayObject;
 use EventIO\InterOp\EventInterface;
 use EventIO\InterOp\ListenerAcceptorInterface;
+use EventIO\InterOp\ListenerInterface;
 use Generator;
 use Shrikeh\Bounce\Event\Map\MapInterface;
 use Shrikeh\Bounce\Listener\Queue\PriorityQueue;
@@ -21,7 +22,7 @@ class MappedListeners
     private $mappedListeners;
 
     /**
-     * @param SplObjectStorage|null $mappedListeners
+     * @param SplObjectStorage|null $mappedListeners Existing storage if any
      * @return MappedListeners
      */
     public static function create(
@@ -36,7 +37,7 @@ class MappedListeners
 
     /**
      * MappedListeners constructor.
-     * @param SplObjectStorage $mappedListeners
+     * @param SplObjectStorage $mappedListeners Storage for the mapped listeners
      */
     private function __construct(
         SplObjectStorage $mappedListeners
@@ -45,13 +46,13 @@ class MappedListeners
     }
 
     /**
-     * @param MapInterface $map
-     * @param $listener
-     * @param int $priority
+     * @param MapInterface      $map      A map for events
+     * @param ListenerInterface $listener A listener to map
+     * @param int               $priority The priority of the listener in the queue
      */
     public function mapListener(
         MapInterface $map,
-        $listener,
+        ListenerInterface $listener,
         $priority = ListenerAcceptorInterface::PRIORITY_NORMAL
     ) {
         $mappedListeners = $this->listenersForMap($map);
@@ -64,7 +65,7 @@ class MappedListeners
     }
 
     /**
-     * @param EventInterface $event
+     * @param EventInterface $event The event to return listeners for
      * @return Generator
      */
     public function listenersFor(EventInterface $event): Generator
@@ -94,9 +95,8 @@ class MappedListeners
         }
     }
 
-
     /**
-     * @param MapInterface $map
+     * @param MapInterface $map A map to look up listeners for
      * @return SplObjectStorage
      */
     private function listenersForMap(MapInterface $map): SplObjectStorage
@@ -108,5 +108,3 @@ class MappedListeners
         return $this->mappedListeners->offsetGet($map);
     }
 }
-
-

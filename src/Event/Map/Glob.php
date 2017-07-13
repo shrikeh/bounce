@@ -3,6 +3,10 @@ namespace Shrikeh\Bounce\Event\Map;
 
 use EventIO\InterOp\EventInterface;
 
+/**
+ * Class Glob
+ * @package Shrikeh\Bounce\Event\Map
+ */
 final class Glob implements MapInterface
 {
     /**
@@ -12,7 +16,7 @@ final class Glob implements MapInterface
 
     /**
      * Glob constructor.
-     * @param string $globPattern
+     * @param string $globPattern A glob pattern
      */
     public function __construct(string $globPattern)
     {
@@ -20,7 +24,7 @@ final class Glob implements MapInterface
     }
 
     /**
-     *
+     * @return string
      */
     public function __toString(): string
     {
@@ -28,7 +32,7 @@ final class Glob implements MapInterface
     }
 
     /**
-     * @param Event $event
+     * @param EventInterface $event The event to test
      * @return bool
      */
     public function isMatch(EventInterface $event): bool

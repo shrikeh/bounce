@@ -2,7 +2,8 @@
 
 namespace Shrikeh\Bounce\Event;
 
-use \EventIO\InterOp\EventInterface;
+use EventIO\InterOp\EventInterface;
+use EventIO\InterOp\EventTrait;
 
 /**
  * Class NamedEvent
@@ -10,16 +11,12 @@ use \EventIO\InterOp\EventInterface;
  */
 final class Named implements EventInterface
 {
-    /**
-     * @var string
-     */
-    private $name;
+    use EventTrait;
 
     /**
-     * @var boolean
+     * @param string $name The name of the event
+     * @return Named
      */
-    private $propogationStopped = false;
-
     public static function create(string $name): self
     {
         return new self($name);
@@ -31,35 +28,6 @@ final class Named implements EventInterface
      */
     private function __construct(string $name)
     {
-        $this->name                 = $name;
-    }
-
-    /**
-     * The name of the event
-     * @return string
-     */
-    public function name(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * Check whether propagation was stopped.
-     *
-     * @return bool
-     */
-    public function isPropagationStopped(): bool
-    {
-        return ($this->propogationStopped);
-    }
-
-    /**
-     * @return self
-     */
-    public function stopPropagation(): self
-    {
-        $this->propogationStopped = true;
-
-        return $this;
+        $this->name = $name;
     }
 }

@@ -33,31 +33,31 @@ final class Bounce implements ServiceProviderInterface
      */
     public function register(Container $pimple)
     {
-        $pimple[self::EVENT_MAP_FACTORY] = function(): EventMapFactory {
+        $pimple[self::EVENT_MAP_FACTORY] = function (): EventMapFactory {
             return new EventMapFactory();
         };
 
-        $pimple[self::EVENT_QUEUE] = function(): EventQueue {
+        $pimple[self::EVENT_QUEUE] = function (): EventQueue {
             return EventQueue::create();
         };
 
-        $pimple[self::MAPPED_LISTENERS] = function(): MappedListeners {
+        $pimple[self::MAPPED_LISTENERS] = function (): MappedListeners {
             return MappedListeners::create();
         };
 
-        $pimple[self::ACCEPTOR] = function(Container $con): Acceptor {
+        $pimple[self::ACCEPTOR] = function (Container $con): Acceptor {
             return Acceptor::create(
                 $con[self::EVENT_MAP_FACTORY],
                 $con[self::MAPPED_LISTENERS]
             );
         };
 
-        $pimple[self::DISPATCHER] = function(Container $con): Dispatcher {
+        $pimple[self::DISPATCHER] = function (Container $con): Dispatcher {
             return Dispatcher::create($con[self::EVENT_QUEUE]);
         };
 
-        $pimple[self::EMITTER] = function(Container $con): Emitter {
-            return new Emitter(
+        $pimple[self::EMITTER] = function (Container $con): Emitter {
+            return Emitter::create(
                 $con[self::ACCEPTOR],
                 $con[self::DISPATCHER]
             );

@@ -3,6 +3,10 @@ namespace Shrikeh\Bounce\Event\Map;
 
 use EventIO\InterOp\EventInterface;
 
+/**
+ * Class EventType
+ * @package Shrikeh\Bounce\Event\Map
+ */
 final class EventType implements MapInterface
 {
     /**
@@ -12,13 +16,20 @@ final class EventType implements MapInterface
 
     /**
      * EventType constructor.
-     * @param string $eventType
+     * @param string $eventType A class type to look for
      */
     public function __construct(string $eventType)
     {
+        if (!interface_exists($eventType) || class_exists($eventType)) {
+            $msg = 'No such interface or class as %s exists';
+            throw new \RuntimeException(sprintf($msg));
+        }
         $this->eventType = $eventType;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->eventType;
