@@ -2,10 +2,17 @@
 namespace Shrikeh\Bounce;
 
 use Shrikeh\Bounce\Event\Map\Glob;
-use Shrikeh\Bounce\Event\MapInterface as Map;
+use Shrikeh\Bounce\Event\Map\MapInterface as Map;
 
+/**
+ * Class EventMapFactory
+ * @package Shrikeh\Bounce
+ */
 class EventMapFactory
 {
+    const MAP_GLOB          = 'Glob';
+    const MAP_EVENT_TYPE    = 'EventType';
+
     private $maps;
 
     public function __construct()
@@ -13,46 +20,30 @@ class EventMapFactory
         $this->maps = new \ArrayObject();
     }
 
+    /**
+     * @param string $string
+     * @return Glob
+     */
     public function glob(string $string): Glob
     {
         return new Glob($string);
     }
 
-
-    public function map($map)
-    {
-        if ($map instanceof Map) {
-
-        }
-
-        if (!$this->maps->offsetExists($map)) {
-            $newMap = new Glob($map);
-
-        }
-
-
-        return $this->maps->offsetGet($map);
-    }
-
-    private function getMap($map)
-    {
-
-        if (!$this->maps->offsetExists($map)) {
-            $this->maps->offsetSet($map, new Glob($map));
-        }
-
-        return $this->maps->offsetGet($map);
-    }
-
     /**
-     * @param Map $map
-     * @param null $identifier
+     * @param $map
+     * @return Glob
      */
-    private function addMap(Map $map, $identifier = null)
+    public function map($map, $type = self::MAP_GLOB)
     {
-        if (null === $identifier) {
-            $identifier = $map;
+        if (!$map instanceof Map) {
+            switch ($type) {
+                case self::MAP_GLOB:
+                    $map = $this->glob($map);
+                    break;
+            }
+
         }
-        $this->maps->offsetSet($identifier, $map);
+
+        return $map;
     }
 }

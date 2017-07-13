@@ -1,0 +1,148 @@
+<?php
+namespace Shrikeh\Bounce\Dispatcher;
+
+use EventIO\InterOp\EventInterface as Event;
+use EventIO\InterOp\ListenerInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
+use Shrikeh\Bounce\Event\Queue\EventQueue;
+use Shrikeh\Bounce\Event\Queue\EventQueueInterface;
+use Shrikeh\Bounce\Listener\ListenerAcceptorInterface;
+use Shrikeh\Bounce\Traits\PsrLoggerTrait;
+
+/**
+ * Class Dispatcher
+ * @package Shrikeh\Bounce\Dispatcher
+ */
+class Dispatcher implements DispatcherInterface
+{
+    use PsrLoggerTrait;
+
+    const LOG_DISPATCH_LOOP_STARTING = 'Dispatch loop starting';
+    const LOG_DISPATCH_LOOP_COMPLETE = 'Dispatch loop complete';
+
+    /**
+     * @var EventQueueInterface
+     */
+    private $queue;
+
+    /**
+     * @var bool
+     */
+    private $dispatching  = false;
+
+    /**
+     * @param EventQueueInterface|null $queue
+     * @param LoggerInterface|null $logger
+     * @return Dispatcher
+     */
+    public static function create(
+        EventQueueInterface $queue  = null,
+        LoggerInterface $logger     = null
+    ): self {
+        if (null === $queue) {
+            $queue = EventQueue::create();
+        }
+
+        return new self($queue, $logger);
+    }
+
+    /**
+     * Dispatcher constructor.
+     * @param $queue
+     */
+    private function __construct(
+        EventQueueInterface $queue,
+        LoggerInterface $logger = null
+    ) {
+        $this->queue = $queue;
+        $this->logger($logger);
+    }
+
+    /**
+     * Whether we are in a dispatch loop
+     * @return bool
+     */
+    public function isDispatching(): bool
+    {
+        return $this->dispatching;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function dispatch(Event $event, ListenerAcceptorInterface $acceptor)
+    {
+        $this->queue->queue($event);
+        if (!$this->isDispatching()) {
+            $this->setDispatching();
+            foreach ($this->queue->events() as $event) {
+                $this->log(
+                    LogLevel::INFO,
+                    sprintf(
+                        'Dispatching event %s',
+                        $event->name()
+                    )
+                );
+                $this->dispatchEvent($event, $acceptor);
+            }
+            $this->clearDispatching();
+        }
+    }
+
+    /**
+     * @param Event $event
+     * @param ListenerAcceptorInterface $acceptor
+     */
+    private function dispatchEvent(Event $event, ListenerAcceptorInterface $acceptor)
+    {
+        foreach ($acceptor->listenersFor($event) as $listener) {
+            if ($event->isPropagationStopped()) {
+                $this->log(LogLevel::INFO,
+                    sprintf(
+                        'Event "%s" propagation stopped, halting propagation',
+                        $event->name()
+                    )
+                );
+                return;
+            }
+            $this->handleEvent($event, $listener);
+        }
+
+    }
+
+    /**
+     * @param Event $event
+     * @param ListenerInterface $listener
+     */
+    private function handleEvent(Event $event, ListenerInterface $listener)
+    {
+        $this->log(LogLevel::INFO,
+            sprintf(
+                'Passing event "%s" to Listener "%s"',
+                $event->name(),
+                get_class($listener)
+            )
+        );
+        $listener->handle($event);
+    }
+
+    /**
+     * Set the dispatching flag to true.
+     */
+    private function setDispatching()
+    {
+        $this->dispatching = true;
+        $this->log(LogLevel::INFO, self::LOG_DISPATCH_LOOP_STARTING);
+    }
+
+    /**
+     * Set the dispatching flag to false.
+     */
+    private function clearDispatching()
+    {
+        $this->dispatching = false;
+        $this->log(LogLevel::INFO, self::LOG_DISPATCH_LOOP_COMPLETE);
+    }
+
+}

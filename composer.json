@@ -1,0 +1,28 @@
+{
+    "require-dev": {
+      "phpspec/phpspec": "^3.4",
+      "squizlabs/php_codesniffer": "^2.7",
+      "escapestudios/symfony2-coding-standard": "^2.9",
+        "acclimate/container": "dev-master",
+        "pimple/pimple": "^3.1@dev"
+    },
+    "autoload": {
+      "psr-4": {
+        "Shrikeh\\Bounce\\": "src"
+      }
+    },
+    "autoload-dev": {
+      "psr-4": {
+        "Shrikeh\\Bounce\\Examples\\": "examples"
+      }
+    },
+    "config": {
+      "bin-dir": "bin"
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "eventbus-interop/eventbus-interop": "dev-master",
+        "psr/container": "^1.0@dev",
+        "psr/log": "^1.0@dev"
+    }
+}

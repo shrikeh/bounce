@@ -1,10 +1,10 @@
 <?php
 namespace Shrikeh\Bounce\Event\Map;
 
-use \Shrikeh\Bounce\EventInterface as Event;
-use \Shrikeh\Bounce\Event\MapInterface;
+use \EventIO\InterOp\EventInterface as Event;
+use \Shrikeh\Bounce\Event\Map\MapInterface as Map;
 
-final class EventType implements MapInterface
+final class EventType implements Map
 {
     /**
      * @var string

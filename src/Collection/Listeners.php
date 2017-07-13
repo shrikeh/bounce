@@ -1,7 +1,7 @@
 <?php
 namespace Shrikeh\Bounce\Collection;
 
-use Shrikeh\Bounce\Listener\ListenerInterface as Listener;
+use \EventIO\InterOp\ListenerInterface as Listener;
 
 final class Listeners implements \OuterIterator
 {

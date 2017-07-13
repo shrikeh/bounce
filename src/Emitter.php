@@ -2,77 +2,96 @@
 
 namespace Shrikeh\Bounce;
 
-use EventInterface as Event;
-use EventQueueInterface as EventQueue;
+use EventIO\InterOp\EmitterInterface;
+use EventIO\InterOp\EmitterTrait;
+use EventIO\InterOp\EventInterface as Event;
+use EventIO\InterOp\ListenerAcceptorInterface as ListenerAcceptor;
+use EventIO\InterOp\ListenerInterface as Listener;
+use Shrikeh\Bounce\Dispatcher\DispatcherInterface as Dispatcher;
+use Shrikeh\Bounce\Event\Named;
+use Shrikeh\Bounce\Listener\CallableListener;
 
-final class Emitter
+final class Emitter implements EmitterInterface, ListenerAcceptor
 {
-    private $eventQueue;
 
+    use EmitterTrait;
+    /**
+     * @var Dispatcher
+     */
+    private $dispatcher;
+
+    /**
+     * @var ListenerAcceptor
+     */
     private $listeners;
 
     /**
-     * @var boolean
+     * Emitter constructor.
+     * @param Dispatcher $dispatcher
+     * @param ListenerAcceptor $listeners
      */
-    private $dispatching;
-
     public function __construct(
-        EventQueue $eventQueue,
-        ListenerAcceptor $listeners
+        ListenerAcceptor $listeners,
+        Dispatcher $dispatcher
     ) {
-      $this->eventQueue = $eventQueue;
-      $this->listeners  = $listeners;
+        $this->listeners    = $listeners;
+        $this->dispatcher   = $dispatcher;
     }
 
 
-    public function emit(Event $event)
+    /**
+     * {@inheritdoc}
+     */
+    public function emitEvent(Event $event)
     {
-        $this->eventQueue->queue($event);
-        $this->emitEvents();
+        $this->dispatcher->dispatch($event, $this->listeners);
     }
 
-    public function emitEvents()
+    /**
+     * {@inheritdoc}
+     */
+    public function addListener(
+        $eventMap,
+        $listener,
+        $priority = self::PRIORITY_NORMAL
+    ) {
+
+        $this->listeners->addListener(
+            $eventMap,
+            $this->listener($listener),
+            $priority
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function emitName($event)
     {
-        if (!$this->isDispatching()) {
-            $this->setDispatching();
-            foreach ($this->eventQueue->events() as $event) {
-                $this->dispatchEvent($event);
-            }
-            $this->clearDispatching();
+        return $this->emitEvent($this->createNamedEvent($event));
+    }
+
+    /**
+     * @param string $event
+     * @return Named
+     */
+    private function createNamedEvent(string $event): Named
+    {
+        return Named::create($event);
+    }
+
+    /**
+     * @param $listener
+     * @return Listener
+     */
+    private function listener($listener): Listener
+    {
+        if (!$listener instanceof Listener) {
+            $listener = new CallableListener($listener);
+
         }
-    }
 
-    /**
-     * Whether we are in a dispatch loop
-     * @return bool
-     */
-    public function isDispatching(): bool
-    {
-        return $this->dispatching;
-    }
-
-    /**
-     * Set the dispatching flag to true.
-     */
-    private function setDispatching()
-    {
-        $this->dispatching = true;
-    }
-
-    /**
-     * Set the dispatching flag to false.
-     */
-    private function clearDispatching()
-    {
-        $this->dispatching = false;
-    }
-
-    /**
-     * @param Event $event
-     */
-    private function dispatchEvent(Event $event)
-    {
-        //$this->listeners->for($event)
+        return $listener;
     }
 
 }

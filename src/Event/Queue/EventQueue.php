@@ -1,15 +1,15 @@
 <?php
-namespace Shrikeh\Bounce;
+namespace Shrikeh\Bounce\Event\Queue;
 
-use Shrikeh\Bounce\EventInterface as Event;
-use Generator;
-use Iterator;
-use SplQueue;
+use \EventIO\InterOp\EventInterface as Event;
+use \Generator;
+use \Iterator;
+use \SplQueue;
 
 final class EventQueue implements EventQueueInterface
 {
     /**
-     * @var SplQueue
+     * @var EventQueue
      */
     private $queue;
 
@@ -35,7 +35,7 @@ final class EventQueue implements EventQueueInterface
 
     /**
      * EventQueue constructor.
-     * @param SplQueue $queue
+     * @param EventQueue $queue
      */
     private function __construct(SplQueue $queue)
     {

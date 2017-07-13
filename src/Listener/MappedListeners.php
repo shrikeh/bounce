@@ -2,12 +2,16 @@
 namespace Shrikeh\Bounce\Listener;
 
 use ArrayObject;
+use EventIO\InterOp\EventInterface as Event;
 use Generator;
-use Shrikeh\Bounce\Event\MapInterface;
-use Shrikeh\Bounce\EventInterface;
+use Shrikeh\Bounce\Event\Map\MapInterface as Map;
 use Shrikeh\Bounce\Listener\Queue\PriorityQueue;
 use SplObjectStorage;
 
+/**
+ * Class MappedListeners
+ * @package Shrikeh\Bounce\Listener
+ */
 class MappedListeners
 {
     /**
@@ -15,12 +19,10 @@ class MappedListeners
      */
     private $mappedListeners;
 
-    /**
-     * @param SplObjectStorage|null $mappedListeners
-     * @return self
-     */
-    public static function create(SplObjectStorage $mappedListeners = null)
-    {
+
+    public static function create(
+        SplObjectStorage $mappedListeners = null
+    ) {
         if (null === $mappedListeners) {
             $mappedListeners = new SplObjectStorage();
         }
@@ -32,18 +34,18 @@ class MappedListeners
      * MappedListeners constructor.
      * @param SplObjectStorage $mappedListeners
      */
-    private function __construct(SplObjectStorage $mappedListeners)
-    {
+    private function __construct(
+        SplObjectStorage $mappedListeners
+    ) {
         $this->mappedListeners = $mappedListeners;
-        $this->queue            = PriorityQueue::create();
     }
 
     /**
-     * @param MapInterface $map
+     * @param Map $map
      * @param $listener
      * @param int $priority
      */
-    public function mapListener(MapInterface $map, $listener, $priority = 1)
+    public function mapListener(Map $map, $listener, $priority = 1)
     {
         $mappedListeners = $this->listenersForMap($map);
 
@@ -55,16 +57,24 @@ class MappedListeners
     }
 
     /**
-     * @param EventInterface $event
+     * @param Event $event
      * @return Generator
      */
-    public function listenersFor(EventInterface $event): Generator
+    public function listenersFor(Event $event): Generator
     {
+        $queue = PriorityQueue::create();
+
         foreach ($this->maps() as $map) {
             if ($map->isMatch($event)) {
-                yield from $this->listeners($map);
+                $listeners = $this->mappedListeners->offsetGet($map);
+                foreach ($listeners as $listener) {
+                    foreach ($listeners->offsetGet($listener) as $priority) {
+                        $queue->queue($listener, $priority);
+                    }
+                }
             }
         }
+        yield from $queue->listeners();
     }
 
     /**
@@ -77,27 +87,12 @@ class MappedListeners
         }
     }
 
-    /**
-     * @param MapInterface $map
-     * @return Generator
-     */
-    private function listeners(MapInterface $map)
-    {
-        $listeners = $this->mappedListeners->offsetGet($map);
-
-        foreach ($listeners as $listener) {
-            foreach ($listeners->offsetGet($listener) as $priority) {
-                yield $listener => $priority;
-            }
-        }
-
-    }
 
     /**
-     * @param MapInterface $map
+     * @param Map $map
      * @return SplObjectStorage
      */
-    private function listenersForMap(MapInterface $map): SplObjectStorage
+    private function listenersForMap(Map $map): SplObjectStorage
     {
         if (!$this->mappedListeners->contains($map)) {
             $this->mappedListeners->attach($map, new SplObjectStorage());

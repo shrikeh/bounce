@@ -2,11 +2,13 @@
 
 namespace Shrikeh\Bounce\Listener\Queue;
 
+use EventIO\InterOp\ListenerInterface as Listener;
 use Generator;
+use Shrikeh\Bounce\Listener\Queue\ListenerQueueInterface as ListenerQueue;
 use SplPriorityQueue;
 use SplQueue;
 
-class PriorityQueue
+class PriorityQueue implements ListenerQueue
 {
     /**
      * @var SplPriorityQueue
@@ -36,13 +38,14 @@ class PriorityQueue
     }
 
     /**
-     * @return Generator
+     * {@inheritdoc}
      */
     public function listeners(): Generator
     {
         $this->prioritizedQueue->setExtractFlags(SplPriorityQueue::EXTR_DATA);
-        $this->prioritizedQueue->rewind();
-        foreach ($this->prioritizedQueue as $listeners) {
+
+        while ($this->prioritizedQueue->valid()) {
+            $listeners = $this->prioritizedQueue->extract();
             while (!$listeners->isEmpty()) {
                 yield $listeners->dequeue();
             }
@@ -50,27 +53,29 @@ class PriorityQueue
     }
 
     /**
-     * @param $listener
-     * @param $priority
+     * {@inheritdoc}
      */
-    public function queue($listener, $priority)
+    public function queue(Listener $listener, $priority)
     {
         $prioritizedQueue   = new SplPriorityQueue();
         $queue              = $this->createQueue();
 
         $prioritizedQueue->insert($queue, $priority);
 
-        $this->prioritizedQueue->setExtractFlags(SplPriorityQueue::EXTR_BOTH);
-        $this->prioritizedQueue->rewind();
-        foreach($this->prioritizedQueue as $listenerQueue) {
-            $listeners = $listenerQueue['data'];
-            if ($this->compare($listenerQueue['priority'], $priority)) {
-                $this->addToQueue($queue, $listeners);
 
+        $this->prioritizedQueue->setExtractFlags(SplPriorityQueue::EXTR_BOTH);
+
+        while (!$this->prioritizedQueue->isEmpty()) {
+            $listenerQueue = $this->prioritizedQueue->extract();
+
+            $listeners      = $listenerQueue['data'];
+            $queuePriority  = $listenerQueue['priority'];
+            if ($this->compare($queuePriority, $priority)) {
+                $this->addToQueue($queue, $listeners);
                 continue;
             }
 
-            $prioritizedQueue->insert($listeners, $priority);
+            $prioritizedQueue->insert($listeners, $queuePriority);
         }
 
         $queue->enqueue($listener);
