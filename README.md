@@ -82,6 +82,41 @@ event: foo.baz
 event: foo.foo
 ```
 
+### PSR-11 Container-based listeners
+
+Some listeners may be heavy to create (requiring database access, file handling, etc) - none of which are necessary if the listener is never actually called. Instead, Bounce uses a `Psr11Container` that allows the listener to be created lazily, and only when the listener is triggered. Here is an example using the awesome [Pimple] DI container with the [Acclimate] adapter:
+
+
+```php
+<?php
+use Acclimate\Container\ContainerAcclimator;
+use Pimple\Container;
+use Shrikeh\Bounce\Emitter;
+use Shrikeh\Bounce\Listener\Psr11Container;
+
+require_once __DIR__.'/../vendor/autoload.php';
+
+$pimple     = new Container();
+
+$pimple['some_heavy_listener'] = function() {
+    return function() {
+        echo 'has this run?';
+    };
+};
+
+$acclimator = new ContainerAcclimator();
+$container  = $acclimator->acclimate($pimple);
+
+$lazyListener = new Psr11Container($container, 'some_heavy_listener');
+
+$emitter = Emitter::create();
+ 
+$emitter->addListener('foo.*', $lazyListener);
+
+$emitter->emit('foo.bar');
+
+```
+The above will output `has this run?`.
 
 ## Requirements
 Bounce requires PHP 7.1 or above.
@@ -129,3 +164,6 @@ secondListener: event.first
 firstListener: event.second
 firstListener: event.third
 ```
+[Acclimate]: https://github.com/AcclimateContainer/acclimate-container
+[composer]: https://getcomposer.org
+[Pimple]: https://pimple.symfony.com/

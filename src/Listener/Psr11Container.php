@@ -6,10 +6,10 @@ use EventIO\InterOp\ListenerInterface;
 use Psr\Container\ContainerInterface;
 
 /**
- * Class PsrContainer
+ * Class Psr11Container
  * @package Shrikeh\Bounce\Listener
  */
-class PsrContainer implements ListenerInterface
+class Psr11Container implements ListenerInterface
 {
     /**
      * @var string
@@ -22,7 +22,7 @@ class PsrContainer implements ListenerInterface
     private $container;
 
     /**
-     * PsrContainer constructor.
+     * Psr11Container constructor.
      * @param ContainerInterface $container A PSR Container to build from
      * @param string             $entryId   An ID in the PSR container
      */

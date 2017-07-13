@@ -4,7 +4,7 @@ use EventIO\InterOp\EventInterface as Event;
 use Pimple\Container;
 use Shrikeh\Bounce\Examples\Mock\Listener\Foo;
 use Shrikeh\Bounce\Listener\Acceptor;
-use Shrikeh\Bounce\Listener\PsrContainer;
+use Shrikeh\Bounce\Listener\Psr11Container;
 use Shrikeh\Bounce\ServiceProvider\Bounce;
 
 require_once __DIR__.'/../vendor/autoload.php';
@@ -40,9 +40,9 @@ $pimple[BAZ_LISTENER] = function() {
     };
 };
 
-$fooListener = new PsrContainer($container, FOO_LISTENER);
-$barListener = new PsrContainer($container, BAR_LISTENER);
-$bazListener = new PsrContainer($container, BAZ_LISTENER);
+$fooListener = new Psr11Container($container, FOO_LISTENER);
+$barListener = new Psr11Container($container, BAR_LISTENER);
+$bazListener = new Psr11Container($container, BAZ_LISTENER);
 
 
 $emitter->addListener('foo.*', $fooListener, Acceptor::PRIORITY_LOW);
