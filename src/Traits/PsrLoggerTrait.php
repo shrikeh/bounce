@@ -1,7 +1,7 @@
 <?php
 namespace Shrikeh\Bounce\Traits;
 
-use Psr\Log\LoggerInterface as Logger;
+use Psr\Log\LoggerInterface;
 
 /**
  * Trait PsrLoggerTrait
@@ -10,7 +10,7 @@ use Psr\Log\LoggerInterface as Logger;
 trait PsrLoggerTrait
 {
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     protected $logger;
 
@@ -21,14 +21,17 @@ trait PsrLoggerTrait
      */
     private function log(string $level, string $message, array $context = array())
     {
-        if ($this->logger instanceof Logger) {
+        if ($this->logger instanceof LoggerInterface) {
             $this->logger->log($level, $message, $context);
         }
     }
 
-    private function logger(Logger $logger = null)
+    /**
+     * @param Logger|null $logger
+     */
+    private function logger(LoggerInterface $logger = null)
     {
-        if ($logger instanceof Logger) {
+        if ($logger instanceof LoggerInterface) {
             $this->logger = $logger;
         }
     }

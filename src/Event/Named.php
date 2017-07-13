@@ -2,13 +2,13 @@
 
 namespace Shrikeh\Bounce\Event;
 
-use \EventIO\InterOp\EventInterface as Event;
+use \EventIO\InterOp\EventInterface;
 
 /**
  * Class NamedEvent
  * @package Shrikeh\Bounce\Event
  */
-final class Named implements Event
+final class Named implements EventInterface
 {
     /**
      * @var string

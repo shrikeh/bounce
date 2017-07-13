@@ -2,16 +2,16 @@
 
 namespace Shrikeh\Bounce\Event\Queue;
 
-use EventIO\InterOp\EventInterface as Event;
+use EventIO\InterOp\EventInterface;
 use Iterator;
 
 interface EventQueueInterface
 {
     /**
-     * @param Event[] ...$events
+     * @param EventInterface[] ...$events
      * @return mixed
      */
-    public function queue(Event ...$events);
+    public function queue(EventInterface ...$events);
 
     /**
      * @return Iterator

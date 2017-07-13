@@ -1,10 +1,9 @@
 <?php
 namespace Shrikeh\Bounce\Event\Map;
 
-use \EventIO\InterOp\EventInterface as Event;
-use \Shrikeh\Bounce\Event\Map\MapInterface as Map;
+use EventIO\InterOp\EventInterface;
 
-final class EventType implements Map
+final class EventType implements MapInterface
 {
     /**
      * @var string
@@ -28,7 +27,7 @@ final class EventType implements Map
     /**
      * {@inheritdoc}
      */
-    public function isMatch(Event $event): bool
+    public function isMatch(EventInterface $event): bool
     {
         // see https://veewee.github.io/blog/optimizing-php-performance-by-fq-function-calls/
         return (\is_a($event, $this->eventType));

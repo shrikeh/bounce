@@ -1,7 +1,7 @@
 <?php
 namespace Shrikeh\Bounce\Event\Queue;
 
-use \EventIO\InterOp\EventInterface as Event;
+use \EventIO\InterOp\EventInterface;
 use \Generator;
 use \Iterator;
 use \SplQueue;
@@ -45,10 +45,10 @@ final class EventQueue implements EventQueueInterface
 
     /**
      * Add an event to the event queue
-     * @param Event $event The event to add
+     * @param EventInterface $event The event to add
      * @return Generator
      */
-    public function queue(Event ...$events)
+    public function queue(EventInterface ...$events)
     {
         foreach ($events as $event) {
             $this->queue->enqueue($event);

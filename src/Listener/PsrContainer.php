@@ -1,15 +1,15 @@
 <?php
 namespace Shrikeh\Bounce\Listener;
 
-use EventIO\InterOp\EventInterface as Event;
-use EventIO\InterOp\ListenerInterface as Listener;
-use Psr\Container\ContainerInterface as Container;
+use EventIO\InterOp\EventInterface;
+use EventIO\InterOp\ListenerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class PsrContainer
  * @package Shrikeh\Bounce\Listener
  */
-class PsrContainer implements Listener
+class PsrContainer implements ListenerInterface
 {
     /**
      * @var string
@@ -17,11 +17,11 @@ class PsrContainer implements Listener
     private $entryId;
 
     /**
-     * @var Container
+     * @var ContainerInterface
      */
     private $container;
 
-    public function __construct(Container $container, $entryId)
+    public function __construct(ContainerInterface $container, $entryId)
     {
         $this->container    = $container;
         $this->entryId      = $entryId;
@@ -30,22 +30,22 @@ class PsrContainer implements Listener
     /**
      * {@inheritdoc}
      */
-    public function handle(Event $event)
+    public function handle(EventInterface $event)
     {
         $this->listener()->handle($event);
     }
 
     /**
-     * @return Listener
+     * @return ListenerInterface
      */
-    private function listener(): Listener
+    private function listener(): ListenerInterface
     {
         if (!$this->container->has($this->entryId)) {
 
         }
         $listener = $this->container->get($this->entryId);
 
-        if (!$listener instanceof Listener) {
+        if (!$listener instanceof ListenerInterface) {
             $listener = new CallableListener($listener);
         }
 

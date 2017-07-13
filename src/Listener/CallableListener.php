@@ -2,9 +2,9 @@
 namespace Shrikeh\Bounce\Listener;
 
 use EventIO\InterOp\EventInterface;
-use EventIO\InterOp\ListenerInterface as Listener;
+use EventIO\InterOp\ListenerInterface;
 
-class CallableListener implements Listener
+class CallableListener implements ListenerInterface
 {
     /**
      * @var callable

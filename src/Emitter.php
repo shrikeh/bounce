@@ -11,6 +11,10 @@ use Shrikeh\Bounce\Dispatcher\DispatcherInterface as Dispatcher;
 use Shrikeh\Bounce\Event\Named;
 use Shrikeh\Bounce\Listener\CallableListener;
 
+/**
+ * Class Emitter
+ * @package Shrikeh\Bounce
+ */
 final class Emitter implements EmitterInterface, ListenerAcceptor
 {
 

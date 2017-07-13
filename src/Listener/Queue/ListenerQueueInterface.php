@@ -2,7 +2,7 @@
 
 namespace Shrikeh\Bounce\Listener\Queue;
 
-use \EventIO\InterOp\ListenerInterface as Listener;
+use \EventIO\InterOp\ListenerInterface;
 use \Generator;
 
 interface ListenerQueueInterface
@@ -12,7 +12,7 @@ interface ListenerQueueInterface
      * @param $priority
      * @return mixed
      */
-    public function queue(Listener $listener, $priority);
+    public function queue(ListenerInterface $listener, $priority);
 
     /**
      * @return Generator

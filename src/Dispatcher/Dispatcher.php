@@ -1,7 +1,7 @@
 <?php
 namespace Shrikeh\Bounce\Dispatcher;
 
-use EventIO\InterOp\EventInterface as Event;
+use EventIO\InterOp\EventInterface;
 use EventIO\InterOp\ListenerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -71,8 +71,10 @@ class Dispatcher implements DispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function dispatch(Event $event, ListenerAcceptorInterface $acceptor)
-    {
+    public function dispatch(
+        EventInterface $event,
+        ListenerAcceptorInterface $acceptor
+    ) {
         $this->queue->queue($event);
         if (!$this->isDispatching()) {
             $this->setDispatching();
@@ -94,8 +96,10 @@ class Dispatcher implements DispatcherInterface
      * @param Event $event
      * @param ListenerAcceptorInterface $acceptor
      */
-    private function dispatchEvent(Event $event, ListenerAcceptorInterface $acceptor)
-    {
+    private function dispatchEvent(
+        EventInterface $event,
+        ListenerAcceptorInterface $acceptor
+    ) {
         foreach ($acceptor->listenersFor($event) as $listener) {
             if ($event->isPropagationStopped()) {
                 $this->log(LogLevel::INFO,
@@ -115,8 +119,10 @@ class Dispatcher implements DispatcherInterface
      * @param Event $event
      * @param ListenerInterface $listener
      */
-    private function handleEvent(Event $event, ListenerInterface $listener)
-    {
+    private function handleEvent(
+        EventInterface $event,
+        ListenerInterface $listener
+    ) {
         $this->log(LogLevel::INFO,
             sprintf(
                 'Passing event "%s" to Listener "%s"',

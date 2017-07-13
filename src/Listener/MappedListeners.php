@@ -2,9 +2,10 @@
 namespace Shrikeh\Bounce\Listener;
 
 use ArrayObject;
-use EventIO\InterOp\EventInterface as Event;
+use EventIO\InterOp\EventInterface;
+use EventIO\InterOp\ListenerAcceptorInterface;
 use Generator;
-use Shrikeh\Bounce\Event\Map\MapInterface as Map;
+use Shrikeh\Bounce\Event\Map\MapInterface;
 use Shrikeh\Bounce\Listener\Queue\PriorityQueue;
 use SplObjectStorage;
 
@@ -19,10 +20,13 @@ class MappedListeners
      */
     private $mappedListeners;
 
-
+    /**
+     * @param SplObjectStorage|null $mappedListeners
+     * @return MappedListeners
+     */
     public static function create(
         SplObjectStorage $mappedListeners = null
-    ) {
+    ): self {
         if (null === $mappedListeners) {
             $mappedListeners = new SplObjectStorage();
         }
@@ -41,12 +45,15 @@ class MappedListeners
     }
 
     /**
-     * @param Map $map
+     * @param MapInterface $map
      * @param $listener
      * @param int $priority
      */
-    public function mapListener(Map $map, $listener, $priority = 1)
-    {
+    public function mapListener(
+        MapInterface $map,
+        $listener,
+        $priority = ListenerAcceptorInterface::PRIORITY_NORMAL
+    ) {
         $mappedListeners = $this->listenersForMap($map);
 
         if (!$mappedListeners->contains($listener)) {
@@ -57,10 +64,10 @@ class MappedListeners
     }
 
     /**
-     * @param Event $event
+     * @param EventInterface $event
      * @return Generator
      */
-    public function listenersFor(Event $event): Generator
+    public function listenersFor(EventInterface $event): Generator
     {
         $queue = PriorityQueue::create();
 
@@ -89,10 +96,10 @@ class MappedListeners
 
 
     /**
-     * @param Map $map
+     * @param MapInterface $map
      * @return SplObjectStorage
      */
-    private function listenersForMap(Map $map): SplObjectStorage
+    private function listenersForMap(MapInterface $map): SplObjectStorage
     {
         if (!$this->mappedListeners->contains($map)) {
             $this->mappedListeners->attach($map, new SplObjectStorage());

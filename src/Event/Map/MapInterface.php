@@ -1,14 +1,14 @@
 <?php
 namespace Shrikeh\Bounce\Event\Map;
 
-use EventIO\InterOp\EventInterface as Event;
+use EventIO\InterOp\EventInterface;
 
 interface MapInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function isMatch(Event $event): bool;
+    public function isMatch(EventInterface $event): bool;
 
     /**
      * @return string

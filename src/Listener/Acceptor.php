@@ -1,13 +1,12 @@
 <?php
 namespace Shrikeh\Bounce\Listener;
 
-use EventIO\InterOp\EventInterface as Event;
-use Shrikeh\Bounce\Listener\ListenerAcceptorInterface as ListenerAcceptor;
+use EventIO\InterOp\EventInterface;
 use Iterator;
-use Shrikeh\Bounce\Event\Map\MapInterface as Map;
+use Shrikeh\Bounce\Event\Map\MapInterface;
 use Shrikeh\Bounce\EventMapFactory;
 
-final class Acceptor implements ListenerAcceptor
+final class Acceptor implements ListenerAcceptorInterface
 {
     /**
      * @var EventMapFactory
@@ -51,7 +50,7 @@ final class Acceptor implements ListenerAcceptor
      * @param Event $event
      * @return Iterator
      */
-    public function listenersFor(Event $event): Iterator
+    public function listenersFor(EventInterface $event): Iterator
     {
         return $this->listeners->listenersFor($event);
     }
@@ -75,9 +74,9 @@ final class Acceptor implements ListenerAcceptor
      * @param $eventMap
      * @return Map
      */
-    private function createMap($eventMap): Map
+    private function createMap($eventMap): MapInterface
     {
-        if (!$eventMap instanceof Map) {
+        if (!$eventMap instanceof MapInterface) {
             $eventMap = $this->mapFactory->map($eventMap);
         }
 
@@ -89,7 +88,7 @@ final class Acceptor implements ListenerAcceptor
      * @param $listener
      * @param $priority
      */
-    private function mapListener(Map $map, $listener, $priority)
+    private function mapListener(MapInterface $map, $listener, $priority)
     {
         $this->listeners->mapListener($map, $listener, $priority);
     }

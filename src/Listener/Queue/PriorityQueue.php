@@ -2,13 +2,12 @@
 
 namespace Shrikeh\Bounce\Listener\Queue;
 
-use EventIO\InterOp\ListenerInterface as Listener;
+use EventIO\InterOp\ListenerInterface;
 use Generator;
-use Shrikeh\Bounce\Listener\Queue\ListenerQueueInterface as ListenerQueue;
 use SplPriorityQueue;
 use SplQueue;
 
-class PriorityQueue implements ListenerQueue
+class PriorityQueue implements ListenerQueueInterface
 {
     /**
      * @var SplPriorityQueue
@@ -55,7 +54,7 @@ class PriorityQueue implements ListenerQueue
     /**
      * {@inheritdoc}
      */
-    public function queue(Listener $listener, $priority)
+    public function queue(ListenerInterface $listener, $priority)
     {
         $prioritizedQueue   = new SplPriorityQueue();
         $queue              = $this->createQueue();
