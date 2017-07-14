@@ -28,15 +28,13 @@ class AcceptorSpec extends ObjectBehavior
     ) {
         $mapId = 'foo.bar';
         $factory->map($mapId)->willReturn($map);
-        $storage->contains($map)->willReturn(true);
-        $storage->offsetGet($map)->willReturn($listeners);
 
         $this->addListener(
             $mapId,
             $listener
         );
 
-        $listeners->insert($listener, Acceptor::PRIORITY_NORMAL)->shouldBeCalled();
+        $storage->mapListener($map, $listener, Acceptor::PRIORITY_NORMAL)->shouldHaveBeenCalled();
     }
 
 

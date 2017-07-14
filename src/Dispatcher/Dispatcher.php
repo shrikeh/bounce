@@ -72,31 +72,30 @@ class Dispatcher implements DispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function dispatch(
-        ListenerAcceptorInterface $acceptor
-    ) {
-        if (!$this->isDispatching()) {
-            $this->setDispatching();
-            foreach ($this->queue->events() as $event) {
-                $this->log(
-                    LogLevel::INFO,
-                    sprintf(
-                        'Dispatching event %s',
-                        $event->name()
-                    )
-                );
-                $this->dispatchEvent($event, $acceptor);
-            }
-            $this->clearDispatching();
+    public function dispatch(ListenerAcceptorInterface $acceptor)
+    {
+        $this->setDispatching();
+        foreach ($this->queue->events() as $event) {
+            $this->log(
+                LogLevel::INFO,
+                sprintf(
+                    'Dispatching event %s',
+                    $event->name()
+                )
+            );
+            $this->dispatchEvent($event, $acceptor);
         }
+        $this->clearDispatching();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function enqueue(EventInterface $event)
+    public function enqueue(EventInterface ...$events)
     {
-        $this->queue->queue($event);
+        foreach ($events as $event) {
+            $this->queue->queue($event);
+        }
     }
 
 
@@ -117,19 +116,21 @@ class Dispatcher implements DispatcherInterface
         EventInterface $event,
         ListenerAcceptorInterface $acceptor
     ) {
-        foreach ($acceptor->listenersFor($event) as $listener) {
-            if ($event->isPropagationStopped()) {
-                $this->log(
-                    LogLevel::INFO,
-                    sprintf(
-                        'Event "%s" propagation stopped, halting propagation',
-                        $event->name()
-                    )
-                );
+        if (!$event->isPropagationStopped()) {
+            foreach ($acceptor->listenersFor($event) as $listener) {
+                if ($event->isPropagationStopped()) {
+                    $this->log(
+                        LogLevel::INFO,
+                        sprintf(
+                            'Event "%s" propagation stopped, halting propagation',
+                            $event->name()
+                        )
+                    );
 
-                return;
+                    return;
+                }
+                $this->handleEvent($event, $listener);
             }
-            $this->handleEvent($event, $listener);
         }
     }
 

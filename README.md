@@ -7,6 +7,8 @@ There is an issue with many event buses, in that they allow only one event to oc
 
 This means that an event generated during a cycle will occur immediately, even if that is not appropriate.
 
+Bounce takes a different approach, in which listeners can fuzzy match on events by either name or type, and that further events can be triggered and queued without interrupting the current event cycle. Under the hood,it uses [SPLPriorityQueue], [SPLQueue] and [SPLObjectStorage] to efficiently store and maintain listeners and events during a cycle.
+
 ## Features
 
 Bounce has several key changes over standard implementations:
@@ -167,3 +169,6 @@ firstListener: event.third
 [Acclimate]: https://github.com/AcclimateContainer/acclimate-container
 [composer]: https://getcomposer.org
 [Pimple]: https://pimple.symfony.com/
+[SPLPriorityQueue]: https://secure.php.net/manual/en/class.splpriorityqueue.php
+[SPLQueue]: https://secure.php.net/manual/en/class.splqueue.php
+[SPLObjectStorage]: https://secure.php.net/manual/en/class.splobjectstorage.php

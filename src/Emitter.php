@@ -28,11 +28,6 @@ final class Emitter implements EmitterInterface, ListenerAcceptorInterface
     private $listeners;
 
     /**
-     * @var bool
-     */
-    private $emitting;
-
-    /**
      * @param ListenerAcceptorInterface|null $listeners  A listener acceptor
      * @param DispatcherInterface|null       $dispatcher A dispatcher
      * @return Emitter
@@ -69,7 +64,7 @@ final class Emitter implements EmitterInterface, ListenerAcceptorInterface
      */
     public function emit(...$events)
     {
-        $this->emitting = true;
+        $this->dispatcher->setDispatching();
 
         foreach ($events as $event) {
             $this->parseEvent($event);
@@ -87,6 +82,15 @@ final class Emitter implements EmitterInterface, ListenerAcceptorInterface
         $this->dispatchEvents();
     }
 
+
+    /**
+     * {@inheritdoc}
+     */
+    public function emitName($event)
+    {
+        return $this->emitEvent($this->createNamedEvent($event));
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -102,13 +106,6 @@ final class Emitter implements EmitterInterface, ListenerAcceptorInterface
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function emitName($event)
-    {
-        return $this->emitEvent($this->createNamedEvent($event));
-    }
 
     /**
      * @param string $event
@@ -124,7 +121,7 @@ final class Emitter implements EmitterInterface, ListenerAcceptorInterface
      */
     private function dispatchEvents()
     {
-        if (!$this->emitting) {
+        if (!$this->dispatcher->isDispatching()) {
             $this->dispatchListeners();
         }
     }
@@ -134,9 +131,7 @@ final class Emitter implements EmitterInterface, ListenerAcceptorInterface
      */
     private function dispatchListeners()
     {
-        $this->emitting = true;
         $this->dispatcher->dispatch($this->listeners);
-        $this->emitting = false;
     }
 
     /**

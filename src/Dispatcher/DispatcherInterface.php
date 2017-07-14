@@ -17,8 +17,8 @@ interface DispatcherInterface
     public function dispatch(ListenerAcceptorInterface $acceptor);
 
     /**
-     * @param EventInterface $event An event to queue
+     * @param EventInterface[] ...$events One or more events to queue
      * @return mixed
      */
-    public function enqueue(EventInterface $event);
+    public function enqueue(EventInterface ...$events);
 }
