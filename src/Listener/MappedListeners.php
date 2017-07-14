@@ -3,7 +3,6 @@ namespace Shrikeh\Bounce\Listener;
 
 use ArrayObject;
 use EventIO\InterOp\EventInterface;
-use EventIO\InterOp\ListenerAcceptorInterface;
 use EventIO\InterOp\ListenerInterface;
 use Generator;
 use Shrikeh\Bounce\Event\Map\MapInterface;
