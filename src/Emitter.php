@@ -3,7 +3,6 @@
 namespace Shrikeh\Bounce;
 
 use EventIO\InterOp\EmitterInterface;
-use EventIO\InterOp\EmitterTrait;
 use EventIO\InterOp\EventInterface;
 use EventIO\InterOp\ListenerAcceptorInterface;
 use Shrikeh\Bounce\Dispatcher\Dispatcher;
