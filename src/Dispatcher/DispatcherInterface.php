@@ -27,4 +27,10 @@ interface DispatcherInterface
      * @return void
      */
     public function setDispatching();
+
+    /**
+     * Whether we are in a dispatch loop
+     * @return bool
+     */
+    public function isDispatching(): bool;
 }

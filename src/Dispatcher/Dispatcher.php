@@ -61,8 +61,7 @@ class Dispatcher implements DispatcherInterface
     }
 
     /**
-     * Whether we are in a dispatch loop
-     * @return bool
+     * {@inheritdoc}
      */
     public function isDispatching(): bool
     {
