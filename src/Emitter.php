@@ -3,7 +3,6 @@
 namespace Shrikeh\Bounce;
 
 use EventIO\InterOp\EmitterInterface;
-use EventIO\InterOp\EmitterTrait;
 use EventIO\InterOp\EventInterface;
 use EventIO\InterOp\ListenerAcceptorInterface;
 use Shrikeh\Bounce\Dispatcher\Dispatcher;
@@ -18,7 +17,7 @@ use Shrikeh\Bounce\Listener\Acceptor;
 final class Emitter implements EmitterInterface, ListenerAcceptorInterface
 {
     /**
-     * @var Dispatcher
+     * @var DispatcherInterface
      */
     private $dispatcher;
 

@@ -21,4 +21,10 @@ interface DispatcherInterface
      * @return mixed
      */
     public function enqueue(EventInterface ...$events);
+
+    /**
+     * Set the dispatcher to dispatching.
+     * @return void
+     */
+    public function setDispatching();
 }
