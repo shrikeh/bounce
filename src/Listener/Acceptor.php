@@ -62,7 +62,7 @@ final class Acceptor implements ListenerAcceptorInterface
      */
     public function listenersFor(EventInterface $event): Iterator
     {
-        return $this->listeners->listenersFor($event);
+        yield from $this->listeners->listenersFor($event);
     }
 
     /**

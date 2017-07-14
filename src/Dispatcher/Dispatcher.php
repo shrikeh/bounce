@@ -78,7 +78,7 @@ class Dispatcher implements DispatcherInterface
         foreach ($this->queue->events() as $event) {
             $this->log(
                 LogLevel::INFO,
-                sprintf(
+                \sprintf(
                     'Dispatching event %s',
                     $event->name()
                 )
@@ -121,7 +121,7 @@ class Dispatcher implements DispatcherInterface
                 if ($event->isPropagationStopped()) {
                     $this->log(
                         LogLevel::INFO,
-                        sprintf(
+                        \sprintf(
                             'Event "%s" propagation stopped, halting propagation',
                             $event->name()
                         )
@@ -144,7 +144,7 @@ class Dispatcher implements DispatcherInterface
     ) {
         $this->log(
             LogLevel::INFO,
-            sprintf(
+            \sprintf(
                 'Passing event "%s" to Listener "%s"',
                 $event->name(),
                 get_class($listener)

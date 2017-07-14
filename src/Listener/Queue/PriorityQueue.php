@@ -2,6 +2,7 @@
 
 namespace Shrikeh\Bounce\Listener\Queue;
 
+use ArrayObject;
 use EventIO\InterOp\ListenerAcceptorInterface;
 use EventIO\InterOp\ListenerInterface;
 use Generator;
@@ -15,30 +16,33 @@ use SplQueue;
 class PriorityQueue implements ListenerQueueInterface
 {
     /**
-     * @var SplPriorityQueue
+     * @var ArrayObject
      */
-    private $prioritizedQueue;
+    private $prioritizedListeners;
+
+    const QUEUE_DATA        = 'data';
+    const QUEUE_PRIORITY    = 'priority';
 
     /**
-     * @param SplPriorityQueue|null $priorityQueue An existing queue
+     * @param ArrayObject|null $prioritizedListeners An existing queue
      * @return self
      */
-    public static function create(SplPriorityQueue $priorityQueue = null)
+    public static function create(ArrayObject $prioritizedListeners = null)
     {
-        if (null === $priorityQueue) {
-            $priorityQueue = new SplPriorityQueue();
+        if (null === $prioritizedListeners) {
+            $prioritizedListeners = new ArrayObject();
         }
 
-        return new self($priorityQueue);
+        return new self($prioritizedListeners);
     }
 
     /**
      * ListenerQueue constructor.
-     * @param SplPriorityQueue $prioritizedQueue
+     * @param ArrayObject $prioritizedListeners
      */
-    private function __construct(SplPriorityQueue $prioritizedQueue)
+    private function __construct(ArrayObject $prioritizedListeners)
     {
-        $this->prioritizedQueue = $prioritizedQueue;
+        $this->prioritizedListeners = $prioritizedListeners;
     }
 
     /**
@@ -46,10 +50,14 @@ class PriorityQueue implements ListenerQueueInterface
      */
     public function listeners(): Generator
     {
-        $this->prioritizedQueue->setExtractFlags(SplPriorityQueue::EXTR_DATA);
+        $prioritizedQueue = new SplPriorityQueue();
 
-        while ($this->prioritizedQueue->valid()) {
-            $listeners = $this->prioritizedQueue->extract();
+        foreach ($this->prioritizedListeners as $priority => $queue) {
+            $prioritizedQueue->insert($queue, $priority);
+        }
+
+        while (!$prioritizedQueue->isEmpty()) {
+            $listeners = $prioritizedQueue->extract();
             while (!$listeners->isEmpty()) {
                 yield $listeners->dequeue();
             }
@@ -59,46 +67,16 @@ class PriorityQueue implements ListenerQueueInterface
     /**
      * {@inheritdoc}
      */
-    public function queue(ListenerInterface $listener, $priority = ListenerAcceptorInterface::PRIORITY_NORMAL)
-    {
-        $prioritizedQueue   = new SplPriorityQueue();
-        $queue              = $this->createQueue();
+    public function queue(
+        ListenerInterface $listener,
+        $priority = ListenerAcceptorInterface::PRIORITY_NORMAL
+    ) {
 
-        $prioritizedQueue->insert($queue, $priority);
-
-
-        $this->prioritizedQueue->setExtractFlags(SplPriorityQueue::EXTR_BOTH);
-
-        while (!$this->prioritizedQueue->isEmpty()) {
-            $listenerQueue = $this->prioritizedQueue->extract();
-
-            $listeners      = $listenerQueue['data'];
-            $queuePriority  = $listenerQueue['priority'];
-            if ($this->compare($queuePriority, $priority)) {
-                $this->addToQueue($queue, $listeners);
-                continue;
-            }
-
-            $prioritizedQueue->insert($listeners, $queuePriority);
+        if (!$this->prioritizedListeners->offsetExists($priority)) {
+            $this->prioritizedListeners->offsetSet($priority, $this->createQueue());
         }
 
-        $queue->enqueue($listener);
-
-        $this->prioritizedQueue = $prioritizedQueue;
-    }
-
-    /**
-     * @param $queue
-     * @param $listeners
-     * @return SplQueue
-     */
-    private function addToQueue($queue, $listeners): SplQueue
-    {
-        foreach ($listeners as $listener) {
-            $queue->enqueue($listener);
-        }
-
-        return $queue;
+        $this->prioritizedListeners->offsetGet($priority)->enqueue($listener);
     }
 
     /**
@@ -110,15 +88,5 @@ class PriorityQueue implements ListenerQueueInterface
         $queue->setIteratorMode(SplQueue::IT_MODE_FIFO | SplQueue::IT_MODE_DELETE);
 
         return $queue;
-    }
-
-    /**
-     * @param $listenerPriority
-     * @param $priority
-     * @return bool
-     */
-    private function compare($listenerPriority, $priority): bool
-    {
-        return ($this->prioritizedQueue->compare($listenerPriority, $priority) === 0);
     }
 }

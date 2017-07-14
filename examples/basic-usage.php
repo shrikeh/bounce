@@ -2,6 +2,7 @@
 require_once __DIR__.'/../vendor/autoload.php';
 
 use Shrikeh\Bounce\Emitter;
+use Shrikeh\Bounce\Listener\Acceptor;
 
 $emitter = Emitter::create();
 
@@ -13,8 +14,8 @@ $secondListener = function($event) {
     echo sprintf("secondListener: %s\n", $event->name());
 };
 
-$emitter->addListener('event.*', $firstListener);
-$emitter->addListener('*.first', $secondListener);
+$emitter->addListener('event.*', $firstListener, Acceptor::PRIORITY_NORMAL);
+$emitter->addListener('*.first', $secondListener, Acceptor::PRIORITY_HIGH);
 
 
 $emitter->emit('event.first', 'event.second', 'event.third');

@@ -1,4 +1,14 @@
 {
+  "name": "shrikeh/bounce",
+  "description": "Next generation event bus allowing for multiple events and fuzzy event matching",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Barney Hanlon",
+      "email": "barney@shrikeh.net"
+    }
+  ],
   "require-dev": {
     "phpspec/phpspec": "^3.4",
     "squizlabs/php_codesniffer": "^2.7",

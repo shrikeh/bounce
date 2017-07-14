@@ -21,28 +21,40 @@ class MappedListeners
      */
     private $mappedListeners;
 
+    private $queue;
+
     /**
      * @param SplObjectStorage|null $mappedListeners Existing storage if any
+     * @param PriorityQueue|null    $queue           A queue to use
      * @return MappedListeners
      */
     public static function create(
-        SplObjectStorage $mappedListeners = null
+        SplObjectStorage $mappedListeners = null,
+        PriorityQueue $queue = null
     ): self {
         if (null === $mappedListeners) {
             $mappedListeners = new SplObjectStorage();
         }
 
-        return new self($mappedListeners);
+        if (null === $queue) {
+            $queue = PriorityQueue::create();
+        }
+
+
+        return new self($mappedListeners, $queue);
     }
 
     /**
      * MappedListeners constructor.
      * @param SplObjectStorage $mappedListeners Storage for the mapped listeners
+     * @param PriorityQueue|null $queue A queue to use
      */
     private function __construct(
-        SplObjectStorage $mappedListeners
+        SplObjectStorage $mappedListeners,
+        PriorityQueue $queue
     ) {
         $this->mappedListeners = $mappedListeners;
+        $this->queue = $queue;
     }
 
     /**
@@ -70,19 +82,18 @@ class MappedListeners
      */
     public function listenersFor(EventInterface $event): Generator
     {
-        $queue = PriorityQueue::create();
-
         foreach ($this->maps() as $map) {
             if ($map->isMatch($event)) {
                 $listeners = $this->mappedListeners->offsetGet($map);
                 foreach ($listeners as $listener) {
                     foreach ($listeners->offsetGet($listener) as $priority) {
-                        $queue->queue($listener, $priority);
+                        $this->queue->queue($listener, $priority);
                     }
                 }
             }
         }
-        yield from $queue->listeners();
+
+        yield from $this->queue->listeners();
     }
 
     /**

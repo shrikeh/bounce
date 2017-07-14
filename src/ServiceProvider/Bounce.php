@@ -53,7 +53,7 @@ final class Bounce implements ServiceProviderInterface
             );
         };
 
-        $pimple[self::LOG_DISPATCHER] = function() {
+        $pimple[self::LOG_DISPATCHER] = function () {
             return null;
         };
 
