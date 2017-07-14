@@ -39,7 +39,7 @@ final class EventQueue implements EventQueueInterface
 
     /**
      * EventQueue constructor.
-     * @param EventQueue $queue An SplQueue to put events into
+     * @param SplQueue $queue An SplQueue to put events into
      */
     private function __construct(SplQueue $queue)
     {
