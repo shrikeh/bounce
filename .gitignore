@@ -1,5 +1,7 @@
 .*
 !.git*
 !.editorconfig
+!.scrutinizer.yml
+!.blackfire.yml
 vendor/
 bin/
