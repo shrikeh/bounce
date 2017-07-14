@@ -46,7 +46,7 @@ class MappedListeners
     /**
      * MappedListeners constructor.
      * @param SplObjectStorage $mappedListeners Storage for the mapped listeners
-     * @param PriorityQueue|null $queue A queue to use
+     * @param PriorityQueue $queue A queue to use
      */
     private function __construct(
         SplObjectStorage $mappedListeners,
