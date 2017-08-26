@@ -4,4 +4,6 @@ suites:
     namespace: Shrikeh\Bounce
     psr4_prefix: Shrikeh\Bounce
     formatter.name: pretty
+    src_path: %paths.config%/src
+    spec_path: %paths.config%/tests
 ...
