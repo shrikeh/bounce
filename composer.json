@@ -13,8 +13,9 @@
     "phpspec/phpspec": "^3.4",
     "squizlabs/php_codesniffer": "^2.7",
     "escapestudios/symfony2-coding-standard": "^2.9",
-      "acclimate/container": "dev-master",
-      "pimple/pimple": "^3.1@dev"
+    "acclimate/container": "dev-master",
+    "pimple/pimple": "^3.1@dev",
+    "behat/behat": "^3.3"
   },
   "autoload": {
     "psr-4": {

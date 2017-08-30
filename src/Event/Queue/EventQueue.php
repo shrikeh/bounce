@@ -17,7 +17,6 @@ final class EventQueue implements EventQueueInterface
      */
     private $queue;
 
-
     /**
      * @param Iterator|null $events Events to queue
      * @return EventQueue
@@ -59,7 +58,6 @@ final class EventQueue implements EventQueueInterface
 
         return $this->generate();
     }
-
 
     /**
      * @return Iterator
